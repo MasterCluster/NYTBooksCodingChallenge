@@ -1,3 +1,8 @@
 <resources>
-	<string name="app_name">AndroidOTChallenge</string>
+	<string name="app_name">NYT Books</string>
+
+	<string name="open_in_store">Open in store</string>
+	<string name="loading_message">Loading books…</string>
+	<string name="loading_error_message">Oops… Error loading book list.</string>
+	<string name="try_again">Try again</string>
 </resources>

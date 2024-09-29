@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.otchallenge'
+    namespace "com.example.otchallenge"
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.example.otchallenge"
+        applicationId namespace
         minSdk 24
         targetSdk 34
         versionCode 1
@@ -24,39 +24,45 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = '1.8'
+    }
+
+    buildFeatures {
+        viewBinding = true
     }
 }
 
 dependencies {
-
     implementation libs.androidx.core.ktx
     implementation libs.androidx.appcompat
     implementation libs.material
     implementation libs.androidx.activity
     implementation libs.androidx.constraintlayout
+    implementation libs.androidx.window
+
     // dagger
     implementation libs.dagger
+    implementation libs.androidx.legacy.support.v4
+    implementation libs.androidx.recyclerview
     kapt libs.dagger.compiler
 
     //retrofit
     implementation libs.retrofit
-    implementation libs.retrofit.rx.adapter
+    implementation libs.retrofit.converter.gson
 
     //glide
     implementation libs.glide
 
-    //reactive x
-    implementation libs.rx.android
-    implementation libs.rx.java
-    implementation libs.rx.kotlin
-
     testImplementation libs.junit
     androidTestImplementation libs.androidx.junit
     androidTestImplementation libs.androidx.espresso.core
+
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.14'
 }
