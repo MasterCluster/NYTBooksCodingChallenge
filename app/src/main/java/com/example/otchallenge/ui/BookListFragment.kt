@@ -6,11 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import com.example.otchallenge.MyApplication
 import com.example.otchallenge.data.api.usecase.GetHardcoverFictionBooksUseCase
 import com.example.otchallenge.databinding.FragmentBooklistBinding
 import com.example.otchallenge.mvp.MvpContract
 import com.example.otchallenge.mvp.MvpPresenter
 import com.example.otchallenge.mvp.MvpView
+import javax.inject.Inject
 
 class BookListFragment : Fragment() {
 
@@ -18,13 +20,18 @@ class BookListFragment : Fragment() {
     private val binding get() = requireNotNull(_binding)
 
 
-    private var mvpModel = GetHardcoverFictionBooksUseCase()
+    @Inject
+    lateinit var mvpModel: GetHardcoverFictionBooksUseCase
 
-    private var _mvpView: MvpContract.View? = null
-    private val mvpView get() = requireNotNull(_mvpView)
+    private val mvpView: MvpContract.View by lazy {
+        MvpView(binding) {
+            mvpPresenter.fetchBookList()
+        }
+    }
 
-    private var _mvpPresenter: MvpContract.Presenter? = null
-    private val mvpPresenter get() = requireNotNull(_mvpPresenter)
+    private val mvpPresenter: MvpContract.Presenter by lazy {
+        MvpPresenter(lifecycleScope, mvpModel, mvpView)
+    }
 
 
     override fun onCreateView(
@@ -36,16 +43,12 @@ class BookListFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _mvpPresenter = null
-        _mvpView = null
         _binding = null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        (requireActivity().application as MyApplication).appComponent.inject(this)
         super.onViewCreated(view, savedInstanceState)
-
-        _mvpView = MvpView(binding) { mvpPresenter.fetchBookList() }
-        _mvpPresenter = MvpPresenter(lifecycleScope, mvpModel, mvpView)
 
         mvpView.onViewCreated()
         mvpPresenter.fetchBookList()

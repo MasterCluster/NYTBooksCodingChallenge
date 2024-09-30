@@ -7,14 +7,16 @@ import com.example.otchallenge.mvp.MvpContract
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class GetHardcoverFictionBooksUseCase: MvpContract.Model<BookList> {
+class GetHardcoverFictionBooksUseCase(
+    private val repository: NYTBooksRepository
+) : MvpContract.Model<BookList> {
 
     override suspend fun invoke(): Result<BookList> {
         return withContext(Dispatchers.IO) {
             try {
-                val response = NYTBooksRepository.api.getHardcoverFictionBooks()
-//                throw IllegalStateException("DEBUG")
-                if (NYTBooksRepository.isApiError(response.status)) {
+                val response = repository.api.getHardcoverFictionBooks()
+
+                if (repository.isApiError(response.status)) {
                     throw IllegalStateException("API call returned ${response.status}")
                 }
 

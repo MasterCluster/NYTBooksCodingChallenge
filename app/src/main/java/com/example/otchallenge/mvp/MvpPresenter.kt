@@ -1,10 +1,10 @@
 package com.example.otchallenge.mvp
 
-import androidx.lifecycle.LifecycleCoroutineScope
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 class MvpPresenter(
-    private val lifecycleScope: LifecycleCoroutineScope,
+    private val scope: CoroutineScope,
     private val model: MvpContract.Model<BookList>,
     private val view: MvpContract.View,
 ) : MvpContract.Presenter {
@@ -12,7 +12,7 @@ class MvpPresenter(
     override fun fetchBookList() {
         view.showLoading()
 
-        lifecycleScope.launch {
+        scope.launch {
             val result = model.invoke()
 
             view.hideLoading(result.isSuccess)
